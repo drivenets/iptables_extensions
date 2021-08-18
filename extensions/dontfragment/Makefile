@@ -1,39 +1,23 @@
 obj-m += ipt_DF.o
-#IPT_CFLAGS = -fPIC -Wall -Wextra -pedantic
-IPT_CFLAGS = -fPIC
-IPTABLES_VERSION = 1.6.2
+IPT_CFLAGS = -Wall -Wextra -pedantic -O2
 
 all: kernel-module iptables-module
 
-iptables: iptables-$(IPTABLES_VERSION) ipt_DF.h
-	cp ipt_DF.h iptables-$(IPTABLES_VERSION)/include/linux/netfilter_ipv4/ipt_DF.h
-
-iptables-$(IPTABLES_VERSION): iptables-$(IPTABLES_VERSION).tar.bz2
-	tar -xf iptables-$(IPTABLES_VERSION).tar.bz2
-
-iptables-$(IPTABLES_VERSION).tar.bz2:
-	wget http://www.netfilter.org/projects/iptables/files/iptables-$(IPTABLES_VERSION).tar.bz2
-	md5sum -c iptables-$(IPTABLES_VERSION).tar.bz2.md5 || (rm -f iptables-$(IPTABLES_VERSION).tar.bz2 && exit 1)
-
 kernel-module:
-	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) modules
+	make -C /lib/modules/$(shell uname -r)/build M=$(CURDIR) modules
 
-iptables-module: iptables libipt_DF.c
-	$(CC) $(CFLAGS) $(IPT_CFLAGS) -I iptables-$(IPTABLES_VERSION)/include libipt_DF.c -c
-	$(CC) $(CFLAGS) $(IPT_CFLAGS) -shared -o libipt_DF.so libipt_DF.o
+iptables-module: libipt_DF.so
 
-clean-all: clean clean-iptables-archive
+libipt_DF.so: libipt_DF.o
+	gcc -shared -fPIC ${IPT_CFLAGS} -o $@ $^;
 
-clean: clean-kernel-module clean-iptables-module clean-iptables
+libipt_DF.o: libipt_DF.c
+	gcc ${IPT_CFLAGS} -D_INIT=lib$*_init -fPIC -c -o $@ $<;
+
+clean: clean-kernel-module clean-iptables-module
 
 clean-kernel-module:
-	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) clean
+	make -C /lib/modules/$(shell uname -r)/build M=$(CURDIR) clean
 
 clean-iptables-module:
 	rm -f libipt_DF.o libipt_DF.so
-
-clean-iptables:
-	rm -rf iptables-$(IPTABLES_VERSION)
-
-clean-iptables-archive:
-	rm -f iptables-$(IPTABLES_VERSION).tar.bz2

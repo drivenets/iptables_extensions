@@ -2,7 +2,9 @@
 #include <xtables.h>
 
 #include <linux/netfilter_ipv4/ip_tables.h>
-#include <linux/netfilter_ipv4/ipt_DF.h>
+#include "ipt_DF.h"
+
+#define __maybe_unused __attribute__((__unused__))
 
 enum {
 	O_DF_SET = 0,
@@ -52,7 +54,7 @@ static void DF_check(struct xt_fcheck_call *cb)
         "DF: You must specify an action");
 }
 
-static void DF_save(const void *ip, const struct xt_entry_target *target)
+static void DF_save(__maybe_unused const void *ip, const struct xt_entry_target *target)
 {
 	const struct xt_df_tginfo *info = (struct xt_df_tginfo *) target->data;
 
@@ -67,7 +69,7 @@ static void DF_save(const void *ip, const struct xt_entry_target *target)
 	}
 }
 
-static void DF_print(const void *ip, const struct xt_entry_target *target, int numeric)
+static void DF_print(__maybe_unused const void *ip, const struct xt_entry_target *target, __maybe_unused int numeric)
 {
 	const struct xt_df_tginfo *info = (struct xt_df_tginfo *) target->data;
 

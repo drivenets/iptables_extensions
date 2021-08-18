@@ -3,3 +3,6 @@
 *.mod.*
 modules.order
 Module.symvers
+extensions/**/*.so
+extensions/**/*.ko
+out
