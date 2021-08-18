@@ -12,8 +12,8 @@ Contains custom iptables extensions (matches/targets) used in DNOS.
 These iterate and build/clean all the extensions under the `extensions/` directory.
 
 The output of each extension is:
-2. A `.ko` file - The kernel module responsible for the heavy lifting of the extension (registers to netfilter, processes skbs etc).
-1. A `.so` file - A userspace plugin for the `iptables` program. Mostly responsible for argument parsing.
+1. A `.ko` file - The kernel module responsible for the heavy lifting of the extension (registers to netfilter, processes skbs etc).
+2. A `.so` file - A userspace plugin for the `iptables` program. Mostly responsible for argument parsing.
 
 # Tree structure
 1. extensions/
