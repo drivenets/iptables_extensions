@@ -1,3 +1,6 @@
+#ifndef LINUX_VERSION_CODE
+#include <linux/version.h>
+#endif
 #include <linux/module.h>
 #include <linux/kernel.h>
 #include <net/ip.h>
@@ -9,6 +12,14 @@
 MODULE_AUTHOR("Semyon Verchenko");
 MODULE_DESCRIPTION("Netfilter module to set/reset DF flag");
 MODULE_LICENSE("Dual BSD/GPL");
+
+/*
+ * skb_make_writable was removed in this commit:
+ * https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit?id=2cf6bffc49dae26edd12af6b57c8c780590380bf
+ */
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(5,3,0))
+#define skb_ensure_writable(skb, len) (!skb_make_writable((skb), (len)))
+#endif
 
 static int df_tg_check(const struct xt_tgchk_param *param)
 {
@@ -23,7 +34,7 @@ static unsigned int df_tg(struct sk_buff *skb, const struct xt_action_param *par
 	__u16 old_frag_off, new_frag_off;
 
 	/* make_writable might invoke copy-on-write, so fetch iph afterwards */
-	if (!skb_make_writable(skb, sizeof(struct iphdr))){
+	if (skb_ensure_writable(skb, sizeof(struct iphdr))){
 		printk(KERN_ERR "DF: Error making skb writable\n");
 		return NF_DROP;
 	}
