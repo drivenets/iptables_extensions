@@ -9,7 +9,7 @@ kernel-module:
 iptables-module: libipt_DF.so
 
 libipt_DF.so: libipt_DF.o
-	gcc -shared -fPIC ${IPT_CFLAGS} -o $@ $^;
+	gcc -shared -fPIC ${IPT_CFLAGS} -lxtables -o $@ $^;
 
 libipt_DF.o: libipt_DF.c
 	gcc ${IPT_CFLAGS} -D_INIT=lib$*_init -fPIC -c -o $@ $<;

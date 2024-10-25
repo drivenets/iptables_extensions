@@ -7,6 +7,7 @@
 #include "xt_novrf.h"
 
 #define __maybe_unused __attribute__((__unused__))
+void xt_init(void) __attribute__((constructor));
 
 enum {
     O_NOVRF_IN_DEV = 0,
@@ -103,6 +104,6 @@ static struct xtables_match novrf_mt_reg = {
     .x6_options     = novrf_opts,
 };
 
-void _init(void) {
+void xt_init(void) {
     xtables_register_match(&novrf_mt_reg);
 }
