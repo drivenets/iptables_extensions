@@ -9,7 +9,7 @@ kernel-module:
 iptables-module: libxt_novrf.so
 
 libxt_novrf.so: libxt_novrf.o
-	gcc -shared -fPIC ${XT_CFLAGS} -o $@ $^;
+	gcc -shared -fPIC ${XT_CFLAGS} -lxtables -o $@ $^;
 
 libxt_novrf.o: libxt_novrf.c
 	gcc ${XT_CFLAGS} -D_INIT=lib$*_init -fPIC -c -o $@ $<;

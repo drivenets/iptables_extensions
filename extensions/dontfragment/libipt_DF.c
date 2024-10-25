@@ -5,6 +5,7 @@
 #include "ipt_DF.h"
 
 #define __maybe_unused __attribute__((__unused__))
+void xt_init(void) __attribute__((constructor));
 
 enum {
 	O_DF_SET = 0,
@@ -99,7 +100,7 @@ static struct xtables_target df_tg_reg = {
 	.x6_options    = DF_opts,
 };
 
-void _init(void)
+void xt_init(void)
 {
 	xtables_register_target(&df_tg_reg);
 }
