@@ -26,6 +26,3 @@ The output of each extension is:
 # Installing new extensions
 1. Copy the .so files into `/usr/lib/x86_64-linux-gnu/xtables`
 2. `insmod` the .ko files
-
-# But Lahav Senpai, how do I write a new extension myself?
-Check the `help/` directory. `help/Netfilter_Modules.pdf` is a pretty good one.
